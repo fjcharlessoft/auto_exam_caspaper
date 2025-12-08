@@ -34,7 +34,7 @@ jobs:
       - name: Set up JDK 8 (OpenJDK)
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu' # 选择OpenJDK发行版，这里用temurin（建议，官方推荐）
+          distribution: 'zulu' # 选择OpenJDK发行版,这里用temurin(建议,官方推荐)
           java-version: '8'
 
       - name: Check Java version
@@ -87,45 +87,35 @@ jobs:
           echo $(git rev-parse --abbrev-ref HEAD)
           echo "==========="
 
+      - name: git clone 
+        run: |
+          git clone ${{ github.event.client_payload.gitaddress }}
+          git clone git@gitee.com:charlesabc/myutils.git ./${{ github.event.client_payload.project_name }}/myutils
+          ls ./${{ github.event.client_payload.project_name }}
+
       - name: Generate JENKINS.env
         run: |
           echo "export BRANCH=$BRANCH " >> $WORK_ROOT_DIR/.JENKINS.env
           echo "export UTILS_DIR=$UTILS_DIR" >> $WORK_ROOT_DIR/.JENKINS.env
           echo "export WORK_ROOT_DIR=$WORK_ROOT_DIR" >> $WORK_ROOT_DIR/.JENKINS.env
           cat $WORK_ROOT_DIR/.JENKINS.env
-        working-directory: ./${{ github.event.client_payload.project_name }}
-          
 
-      - name: git clone 
+      - name: Build and Deploy
         run: |
-          git clone ${{ github.event.client_payload.gitaddress }}
-          git clone git@gitee.com:charlesabc/myutils.git ./caspaper/myutils
-          ls ./caspaper
-
           echo "===============>sso prepare<========================="
           bash ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/insert_log.sh
 
-
           echo "===============>build sso<======================"
-
           find ${WORK_ROOT_DIR}/myutils/auto_exam -name "*.sh" -exec dos2unix {} \;
-
 
           cd ${WORK_ROOT_DIR}/scripts
           sh build_sso.sh ${BRANCH_NAME} || CheckLastResult
 
           echo "================>sso deploy<====================="
-          #scp -P2222 ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhadmin@${RELEASE_PACKAGE}:/usr/share/nginx/html/softs/tmp1/autoexam/paper
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no xhpadmin@${RELEASE_PACKAGE} ' \
           mkdir -p /www/wwwroot/download.happygogo.site/autoexam/paper
           '
           scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhpadmin@${RELEASE_PACKAGE}:/www/wwwroot/download.happygogo.site/autoexam/paper
-          #ssh root@${RELEASE_PACKAGE} " \
-          #    mkdir -p /www/wwwroot/${RELEASE_PACKAGE}/${HISTORY_PACKAGE}; \
-          #    cp /www/wwwroot/${RELEASE_PACKAGE}/${JAVA_SSO_PACKAGE} /www/wwwroot/${RELEASE_PACKAGE}/${HISTORY_PACKAGE}; \
-          #    chown -R www.www /www/wwwroot/${RELEASE_PACKAGE}/${JAVA_SSO_PACKAGE}; \
-          #    chown -R www.www /www/wwwroot/${RELEASE_PACKAGE}/${HISTORY_PACKAGE}; \
-          #    "
           cd -
           
           sh ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/maixiao/deploy_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
