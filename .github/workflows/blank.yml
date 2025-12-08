@@ -102,6 +102,11 @@ jobs:
 
       - name: Build and Deploy
         run: |
+          pushd .
+          cd ${UTILS_DIR}
+          source utils.sh
+          popd 
+          
           echo "===============>sso prepare<========================="
           bash ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/insert_log.sh
 
