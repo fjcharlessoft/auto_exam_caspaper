@@ -34,7 +34,7 @@ jobs:
       - name: Set up JDK 8 (OpenJDK)
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # 选择OpenJDK发行版，这里用temurin（建议，官方推荐）
+          distribution: 'zulu' # 选择OpenJDK发行版，这里用temurin（建议，官方推荐）
           java-version: '8'
 
       - name: Check Java version
