@@ -85,12 +85,12 @@ jobs:
           ls ./caspaper
 
           echo "===============>sso prepare<========================="
-          bash ${WORKSPACE}/myutils/auto_exam/paper/scripts/insert_log.sh
+          bash ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/insert_log.sh
 
 
           echo "===============>build sso<======================"
 
-          find ${WORKSPACE}/myutils/auto_exam -name "*.sh" -exec dos2unix {} \;
+          find ${WORK_ROOT_DIR}/myutils/auto_exam -name "*.sh" -exec dos2unix {} \;
 
 
           cd scripts
