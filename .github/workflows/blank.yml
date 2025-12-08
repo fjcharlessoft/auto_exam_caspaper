@@ -97,3 +97,20 @@ jobs:
           cd ${WORK_ROOT_DIR}/scripts
           sh build_sso.sh ${BRANCH_NAME} || CheckLastResult
 
+          echo "================>sso deploy<====================="
+          #scp -P2222 ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhadmin@${RELEASE_PACKAGE}:/usr/share/nginx/html/softs/tmp1/autoexam/paper
+          ssh xhpadmin@${RELEASE_PACKAGE} ' \
+          mkdir -p /www/wwwroot/download.happygogo.site/autoexam/paper
+          '
+          scp ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhpadmin@${RELEASE_PACKAGE}:/www/wwwroot/download.happygogo.site/autoexam/paper
+          #ssh root@${RELEASE_PACKAGE} " \
+          #    mkdir -p /www/wwwroot/${RELEASE_PACKAGE}/${HISTORY_PACKAGE}; \
+          #    cp /www/wwwroot/${RELEASE_PACKAGE}/${JAVA_SSO_PACKAGE} /www/wwwroot/${RELEASE_PACKAGE}/${HISTORY_PACKAGE}; \
+          #    chown -R www.www /www/wwwroot/${RELEASE_PACKAGE}/${JAVA_SSO_PACKAGE}; \
+          #    chown -R www.www /www/wwwroot/${RELEASE_PACKAGE}/${HISTORY_PACKAGE}; \
+          #    "
+          cd -
+          
+          sh ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/maixiao/deploy_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
+          echo "===============>deploy <========================"
+
