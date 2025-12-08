@@ -94,6 +94,6 @@ jobs:
           find ${WORK_ROOT_DIR}/myutils/auto_exam -name "*.sh" -exec dos2unix {} \;
 
 
-          cd scripts
+          cd ${WORK_ROOT_DIR}/scripts
           sh build_sso.sh ${BRANCH_NAME} || CheckLastResult
 
