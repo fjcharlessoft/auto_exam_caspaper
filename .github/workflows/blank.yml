@@ -74,6 +74,7 @@ jobs:
           echo "UTILS_DIR=${PWD}/${{github.event.client_payload.project_name}}/myutils" >> $GITHUB_ENV
           echo "WORK_ROOT_DIR=${PWD}/${{github.event.client_payload.project_name}}" >> $GITHUB_ENV
           echo "WORKSPACE=${PWD}/${{github.event.client_payload.project_name}}" >> $GITHUB_ENV
+          echo "RELEASE_PACKAGE=139.224.215.46" >> $GITHUB_ENV
           echo "==========="
           echo $(git rev-parse --abbrev-ref HEAD)
           echo "==========="
@@ -99,10 +100,10 @@ jobs:
 
           echo "================>sso deploy<====================="
           #scp -P2222 ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhadmin@${RELEASE_PACKAGE}:/usr/share/nginx/html/softs/tmp1/autoexam/paper
-          ssh xhpadmin@${RELEASE_PACKAGE} ' \
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no xhpadmin@${RELEASE_PACKAGE} ' \
           mkdir -p /www/wwwroot/download.happygogo.site/autoexam/paper
           '
-          scp ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhpadmin@${RELEASE_PACKAGE}:/www/wwwroot/download.happygogo.site/autoexam/paper
+          scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhpadmin@${RELEASE_PACKAGE}:/www/wwwroot/download.happygogo.site/autoexam/paper
           #ssh root@${RELEASE_PACKAGE} " \
           #    mkdir -p /www/wwwroot/${RELEASE_PACKAGE}/${HISTORY_PACKAGE}; \
           #    cp /www/wwwroot/${RELEASE_PACKAGE}/${JAVA_SSO_PACKAGE} /www/wwwroot/${RELEASE_PACKAGE}/${HISTORY_PACKAGE}; \
