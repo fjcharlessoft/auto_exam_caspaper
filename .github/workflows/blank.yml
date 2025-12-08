@@ -66,8 +66,33 @@ jobs:
             gitee.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEKxHSJ7084RmkJ4YdEi5tngynE8aZe2uEoVVsB/OvYN
           Eof
 
+      - name: Get current branch name
+        id: get_branch
+        run: |
+          echo "BRANCH=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_ENV
+          echo "BRANCH_NAME=master" >> $GITHUB_ENV
+          echo "UTILS_DIR=${PWD}/${{github.event.client_payload.project_name}}/myutils" >> $GITHUB_ENV
+          echo "WORK_ROOT_DIR=${PWD}/${{github.event.client_payload.project_name}}" >> $GITHUB_ENV
+          echo "==========="
+          echo $(git rev-parse --abbrev-ref HEAD)
+          echo "==========="
+          
+
       - name: git clone 
         run: |
           git clone ${{ github.event.client_payload.gitaddress }}
           git clone git@gitee.com:charlesabc/myutils.git ./caspaper/myutils
           ls ./caspaper
+
+          echo "===============>sso prepare<========================="
+          bash ${WORKSPACE}/myutils/auto_exam/paper/scripts/insert_log.sh
+
+
+          echo "===============>build sso<======================"
+
+          find ${WORKSPACE}/myutils/auto_exam -name "*.sh" -exec dos2unix {} \;
+
+
+          cd scripts
+          sh build_sso.sh ${BRANCH_NAME} || CheckLastResult
+
