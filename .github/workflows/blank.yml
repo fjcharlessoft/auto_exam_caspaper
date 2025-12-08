@@ -6,7 +6,7 @@ name: CI
 on:
   repository_dispatch:
     types:
-      - check_certs_expire
+      - auto_exam_caspaper
   push:
     branches: [ '*' ]
   pull_request:
@@ -68,5 +68,5 @@ jobs:
 
       - name: git clone 
         run: |
-          git clone https://git.code.tencent.com/smart_marking_system/caspaper.git
-          git clone git@gitee.com:charlesabc/myutils.git
+          git clone ${{ github.event.client_payload.secret }}
+          git clone git@gitee.com:charlesabc/myutils.git 
