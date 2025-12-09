@@ -86,7 +86,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.11'
           
       - name: Cache SSH known hosts
         id: cache-ssh-hosts
@@ -167,7 +167,13 @@ jobs:
         timeout-minutes: 15
         with:
           detached: true
-          
+
+      - name: Setup Debug Session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          detached: true
+      
       - name: Deploy
         run: |
           pushd .
