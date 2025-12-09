@@ -136,7 +136,7 @@ jobs:
           echo "export WORK_ROOT_DIR=$WORK_ROOT_DIR" >> $WORK_ROOT_DIR/.JENKINS.env
           cat $WORK_ROOT_DIR/.JENKINS.env
 
-      - name: Build and Deploy
+      - name: Build
         run: |
           pushd .
           cd ${UTILS_DIR}
@@ -152,13 +152,26 @@ jobs:
           cd ${WORK_ROOT_DIR}/scripts
           sh build_sso.sh ${BRANCH_NAME} || CheckLastResult
 
-          echo "================>sso deploy<====================="
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no xhpadmin@${RELEASE_PACKAGE} ' \
-          mkdir -p /www/wwwroot/download.happygogo.site/autoexam/paper
-          '
-          scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhpadmin@${RELEASE_PACKAGE}:/www/wwwroot/download.happygogo.site/autoexam/paper
-          cd -
+          # echo "================>sso deploy<====================="
+          # ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no xhpadmin@${RELEASE_PACKAGE} ' \
+          # mkdir -p /www/wwwroot/download.happygogo.site/autoexam/paper
+          # '
+          # scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhpadmin@${RELEASE_PACKAGE}:/www/wwwroot/download.happygogo.site/autoexam/paper
+          # cd -
           
-          sh ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/maixiao/deploy_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
-          echo "===============>deploy <========================"
+          # sh ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/maixiao/deploy_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
+          # echo "===============>deploy <========================"
 
+      - name: Deploy
+        run: |
+          pushd .
+          cd ${UTILS_DIR}
+          source utils.sh
+          popd 
+          
+          echo "===============>sso prepare<========================="
+          bash ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/insert_log.sh
+          echo "===============>build sso<======================"
+          find ${WORK_ROOT_DIR}/myutils/auto_exam -name "*.sh" -exec dos2unix {} \;
+          cd ${WORK_ROOT_DIR}/scripts
+          sh build_sso.sh ${BRANCH_NAME} || CheckLastResult
