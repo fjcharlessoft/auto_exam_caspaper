@@ -134,6 +134,7 @@ jobs:
           echo "export BRANCH=$BRANCH " >> $WORK_ROOT_DIR/.JENKINS.env
           echo "export UTILS_DIR=$UTILS_DIR" >> $WORK_ROOT_DIR/.JENKINS.env
           echo "export WORK_ROOT_DIR=$WORK_ROOT_DIR" >> $WORK_ROOT_DIR/.JENKINS.env
+          echo "export MYUTILS_HOME=$UTILS_DIR" >> $WORK_ROOT_DIR/.JENKINS.env
           cat $WORK_ROOT_DIR/.JENKINS.env
 
       - name: Build
