@@ -118,7 +118,7 @@ jobs:
           echo "WORKSPACE=${PWD}/${{github.event.client_payload.project_name}}" >> $GITHUB_ENV
           echo "JENKINS_ENV_PATH=${PWD}/${{github.event.client_payload.project_name}}/.JENKINS.env" >> $GITHUB_ENV
           echo "BRANCH_NAME=${{github.event.client_payload.BRANCH_NAME}}" >> $GITHUB_ENV
-          echo "gitCommitId=${{github.event.client_payload.gitCommitId}}" >> $GITHUB_ENV
+          # echo "gitCommitId=${{github.event.client_payload.gitCommitId}}" >> $GITHUB_ENV
           echo "RELEASE_PACKAGE=123.60.164.114" >> $GITHUB_ENV 
           echo "JAVA_SSO_PACKAGE=sso-1.0.1.jar"  >> $GITHUB_ENV
           echo "==========="
@@ -138,7 +138,7 @@ jobs:
           echo "export WORK_ROOT_DIR=$WORK_ROOT_DIR" >> $WORK_ROOT_DIR/.JENKINS.env
           echo "export MYUTILS_HOME=$UTILS_DIR" >> $WORK_ROOT_DIR/.JENKINS.env
           echo "export BRANCH_NAME=$BRANCH_NAME" >> $WORK_ROOT_DIR/.JENKINS.env
-          echo "export gitCommitId=$gitCommitId" >> $WORK_ROOT_DIR/.JENKINS.env
+          # echo "export gitCommitId=$gitCommitId" >> $WORK_ROOT_DIR/.JENKINS.env
           cat $WORK_ROOT_DIR/.JENKINS.env
 
       - name: Build
