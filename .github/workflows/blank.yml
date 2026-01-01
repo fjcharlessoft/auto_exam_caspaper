@@ -119,8 +119,8 @@ jobs:
           echo "JENKINS_ENV_PATH=${PWD}/${{github.event.client_payload.project_name}}/.JENKINS.env" >> $GITHUB_ENV
           echo "BRANCH_NAME=${{github.event.client_payload.BRANCH_NAME}}" >> $GITHUB_ENV
           # echo "gitCommitId=${{github.event.client_payload.gitCommitId}}" >> $GITHUB_ENV
-          echo "RELEASE_PACKAGE=123.60.164.114" >> $GITHUB_ENV 
-          echo "JAVA_SSO_PACKAGE=sso-1.0.1.jar"  >> $GITHUB_ENV
+          # echo "RELEASE_PACKAGE=123.60.164.114" >> $GITHUB_ENV 
+          # echo "JAVA_SSO_PACKAGE=sso-1.0.1.jar"  >> $GITHUB_ENV
           echo "ISDEBUG=${{github.event.client_payload.isdebug}}" >> $GITHUB_ENV
 
       # - name: show payload
@@ -170,15 +170,17 @@ jobs:
           cd ${WORK_ROOT_DIR}/scripts
           sh build_sso.sh ${BRANCH_NAME} || CheckLastResult
 
-          # echo "================>sso deploy<====================="
-          # ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no xhpadmin@${RELEASE_PACKAGE} ' \
-          # mkdir -p /www/wwwroot/download.happygogo.site/autoexam/paper
-          # '
-          # scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhpadmin@${RELEASE_PACKAGE}:/www/wwwroot/download.happygogo.site/autoexam/paper
-          # cd -
-          
-          # sh ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/maixiao/deploy_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
-          # echo "===============>deploy <========================"
+
+      - name: Publish
+        run: |
+          pushd .
+          cd ${UTILS_DIR}
+          source utils.sh
+          popd 
+
+          bash ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/publish_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
+
+
 
       # - name: Setup Debug Session
       #   uses: mxschmitt/action-tmate@v3
@@ -192,22 +194,22 @@ jobs:
       #   with:
       #     detached: true
       
-      - name: Deploy
-        run: |
-          pushd .
-          cd ${UTILS_DIR}
-          source utils.sh
-          popd 
+      # - name: Deploy
+      #   run: |
+      #     pushd .
+      #     cd ${UTILS_DIR}
+      #     source utils.sh
+      #     popd 
           
-          echo "================>sso deploy<====================="
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no xhpadmin@${RELEASE_PACKAGE} ' \
-          mkdir -p /www/wwwroot/download.happygogo.site/autoexam/paper
-          '
-          scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhpadmin@${RELEASE_PACKAGE}:/www/wwwroot/download.happygogo.site/autoexam/paper
-          cd -
+      #     echo "================>sso deploy<====================="
+      #     ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no xhpadmin@${RELEASE_PACKAGE} ' \
+      #     mkdir -p /www/wwwroot/download.happygogo.site/autoexam/paper
+      #     '
+      #     # scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${WORKSPACE}/java/target/${JAVA_SSO_PACKAGE} xhpadmin@${RELEASE_PACKAGE}:/www/wwwroot/download.happygogo.site/autoexam/paper
+      #     # cd -
           
-          sh ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/maixiao/deploy_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
+      #     sh ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/maixiao/deploy_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
 
-          #sh ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/develop/deploy_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
+      #     #sh ${WORK_ROOT_DIR}/myutils/auto_exam/paper/scripts/develop/deploy_server.sh  ${JENKINS_ENV_PATH} || CheckLastResult
 
-          echo "===============>deploy <========================"
+      #     echo "===============>deploy <========================"
